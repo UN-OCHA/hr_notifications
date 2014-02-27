@@ -6,6 +6,28 @@
 
 include_once 'hr_notifications.features.inc';
 
+/**
+ * Implements hook_libraries_info().
+ */
+function hr_notifications_libraries_info() {
+  $libraries['mailchimp'] = array(
+    'name' => 'MailChimp MCAPI',
+    'vendor url' => 'http://apidocs.mailchimp.com/api/1.3',
+    'download url' => 'http://apidocs.mailchimp.com/api/downloads/mailchimp-api-class.zip',
+    'version arguments' => array(
+      'file' => 'MCAPI.class.php',
+      // Version 1.3
+      'pattern' => '/\$version = \"((\d+)\.(\d+))\"/',
+    ),
+    'files' => array(
+      'php' => array('MCAPI.class.php'),
+    ),
+  );
+
+  return $libraries;
+}
+
+
 function hr_notifications_block_info() {
   $blocks['hr_follow'] = array(
     'info' => t('Follow block'),
@@ -25,5 +47,52 @@ function hr_notifications_block_view($delta = '') {
       break;
   }
   return $block;
+}
+
+function hr_notifications_mailchimp_get_api_object($api_key) {
+  $library = libraries_load('mailchimp');
+  if (!$library['installed']) {
+    $msg = 'Failed to load MailChimp PHP library. Please refer to the installation requirements.';
+    watchdog('mailchimp', $msg, WATCHDOG_ERROR);
+    drupal_set_message(t($msg), 'error');
+    return NULL;
+  }
+
+  $q = new MCAPI($api_key);
+
+  // Set the timeout to something that won't take down the Drupal site:
+  $q->setTimeout(60);
+
+  // Specify if a secure connection should be used with the API:
+  $q->useSecure(TRUE);
+
+  if ($q->errorCode) {
+    watchdog('mailchimp', 'MCAPI Error: %errmsg', array('%errmsg' => $q->errorMessage), WATCHDOG_ERROR);
+    return NULL;
+  }
+
+  return $q;
+}
+
+/**
+ * Implements hook_form_BASE_FORM_ID_alter()
+ */
+function hr_notifications_form_node_form_alter(&$form, &$form_state) {
+  if (isset($form['field_mailchimp_list'])) {
+    $node = $form_state['build_info']['args'][0];
+    if (!empty($node->field_mailchimp_api_key)) {
+      // Get value
+      $api_key = $node->field_mailchimp_api_key[LANGUAGE_NONE][0]['value'];
+      if (!empty($api_key)) {
+        $api = hr_notifications_mailchimp_get_api_object($api_key);
+        $lists = $api->lists();
+        foreach ($lists['data'] as $list) {
+          $form['field_mailchimp_list']['#options'][$list['id']] = $list['name'];
+        }
+        // Make sure the list is not hidden
+        $form['field_mailchimp_list']['#type'] = 'select';
+      }
+    }
+  }
 }
 
