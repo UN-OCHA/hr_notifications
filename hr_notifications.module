@@ -1,0 +1,29 @@
+<?php
+/**
+ * @file
+ * Code for the Notifications feature.
+ */
+
+include_once 'hr_notifications.features.inc';
+
+function hr_notifications_block_info() {
+  $blocks['hr_follow'] = array(
+    'info' => t('Follow block'),
+  );
+  return $blocks;
+}
+
+function hr_notifications_block_view($delta = '') {
+  $block = array();
+  switch ($delta) {
+    case 'hr_follow':
+      $context = og_context();
+      if (!empty($context) && $context['group_type'] == 'node') {
+        $gid = $context['gid'];
+        $block['content'] = flag_create_link('hr_follow', $gid);
+      }
+      break;
+  }
+  return $block;
+}
+
