@@ -92,12 +92,46 @@ function hr_notifications_form_node_form_alter(&$form, &$form_state) {
         $api = hr_notifications_mailchimp_get_api_object($api_key);
         $lists = $api->lists();
         foreach ($lists['data'] as $list) {
-          $form['field_mailchimp_list']['#options'][$list['id']] = $list['name'];
+          $form['field_mailchimp_list'][LANGUAGE_NONE]['#options'][$list['id']] = $list['name'];
         }
         // Make sure the list is not hidden
-        $form['field_mailchimp_list']['#type'] = 'select';
+        $form['field_mailchimp_list']['#type'] = 'container';
       }
     }
   }
+}
+
+/**
+ * Implements hook_flag_flag()
+ */
+function hr_notifications_flag_flag($flag, $entity_id, $account, $flagging) {
+  global $user;
+  if ($flag->name == 'hr_follow') {
+    $node = node_load($entity_id);
+    if (!empty($node->field_mailchimp_api_key) && !empty($node->field_mailchimp_list)) {
+      $api_key = $node->field_mailchimp_api_key[LANGUAGE_NONE][0]['value'];
+      $list_id = $node->field_mailchimp_list[LANGUAGE_NONE][0]['value'];
+      $api = hr_notifications_mailchimp_get_api_object($api_key);
+      // Subscribe user to list
+      $api->listSubscribe($list_id, $user->mail, NULL, 'html', FALSE, FALSE, TRUE, TRUE);
+    }
+  }
+}
+
+/**
+ * Implements hook_flag_unflag()
+ */
+function hr_notifications_flag_unflag($flag, $entity_id, $account, $flagging) {
+  global $user;
+  if ($flag->name == 'hr_follow') {
+    $node = node_load($entity_id);
+    if (!empty($node->field_mailchimp_api_key) && !empty($node->field_mailchimp_list)) {
+      $api_key = $node->field_mailchimp_api_key[LANGUAGE_NONE][0]['value'];
+      $list_id = $node->field_mailchimp_list[LANGUAGE_NONE][0]['value'];
+      $api = hr_notifications_mailchimp_get_api_object($api_key);
+      // Unsubscribe user 
+      $api->listUnsubscribe($list_id, $user->mail);
+    } 
+  } 
 }
 
