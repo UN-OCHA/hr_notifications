@@ -42,7 +42,12 @@ function hr_notifications_block_view($delta = '') {
       $context = og_context();
       if (!empty($context) && $context['group_type'] == 'node') {
         $gid = $context['gid'];
-        $block['content'] = flag_create_link('hr_follow', $gid);
+        if (user_is_logged_in()) {
+          $block['content'] = flag_create_link('hr_follow', $gid);
+        }
+        else {
+          $block['content'] = l('<i class="fa fa-heart"></i> '.t('Login to follow'), 'user/login', array('attributes' => array('class' => array('btn', 'btn-primary', 'btn-lg')), 'html' => TRUE));
+        }
       }
       break;
   }
