@@ -13,4 +13,6 @@ features[features_api][] = api:2
 features[field_base][] = field_mailchimp_api_key
 features[field_base][] = field_mailchimp_list
 features[flag][] = hr_follow
+features[user_permission][] = flag hr_follow
+features[user_permission][] = unflag hr_follow
 features[views_view][] = hr_follows
