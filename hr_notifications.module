@@ -46,7 +46,7 @@ function hr_notifications_block_view($delta = '') {
           $block['content'] = flag_create_link('hr_follow', $gid);
         }
         else {
-          $block['content'] = l('<i class="fa fa-heart"></i> '.t('Login to follow'), 'user/login', array('attributes' => array('class' => array('btn', 'btn-primary', 'btn-lg')), 'html' => TRUE));
+          $block['content'] = l(t('login to follow').' <i class="fa fa-check"></i>', 'user/login', array('attributes' => array('class' => array('btn', 'btn-primary', 'btn-lg')), 'html' => TRUE));
         }
       }
       break;
