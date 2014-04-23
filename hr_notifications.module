@@ -114,6 +114,9 @@ function hr_notifications_flag_flag($flag, $entity_id, $account, $flagging) {
       $api = hr_notifications_mailchimp_get_api_object($api_key);
       // Subscribe user to list
       $api->listSubscribe($list_id, $user->mail, NULL, 'html', FALSE, FALSE, TRUE, TRUE);
+      if ($entity_id == 2490) { // Hardcoded nid of the "About Us" space
+        drupal_set_message(t('Thank you, you are now following us and are now part of our mailing list.'), 'status');
+      }
     }
   }
 }
