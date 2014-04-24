@@ -94,6 +94,7 @@ function hr_notifications_form_node_form_alter(&$form, &$form_state) {
         foreach ($lists['data'] as $list) {
           $form['field_mailchimp_list'][LANGUAGE_NONE]['#options'][$list['id']] = $list['name'];
         }
+        $form['field_mailchimp_list'][LANGUAGE_NONE]['#default_value'] = $node->field_mailchimp_list[LANGUAGE_NONE][0]['value'];
         // Make sure the list is not hidden
         $form['field_mailchimp_list']['#type'] = 'container';
       }
