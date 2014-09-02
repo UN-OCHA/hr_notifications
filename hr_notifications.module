@@ -28,39 +28,6 @@ function hr_notifications_libraries_info() {
 }
 
 /**
- * Implements hook_menu()
- */
-/*function hr_notifications_menu() {
-  // User listing pages.
-  $items['group/%/%/admin/followers'] = array(
-    'title callback' => 'og_ui_menu_title_callback',
-    'title arguments' => array('Followers in @group', 1, 2),
-    'description' => 'See who is following your space.',
-    'page callback' => 'hr_notifications_followers_view',
-    'page arguments' => array(1, 2),
-    'access callback' => 'og_ui_user_access_group',
-    'access arguments' => array('manage members', 1, 2),
-    'weight' => -4,
-  );
-
-  return $items;
-}*/
-
-/**
- * Embed followers view
- */
-/*function hr_notifications_followers_view($group_type, $gid) {
-  og_set_breadcrumb($group_type, $gid, array(l(t('Group'), "$group_type/$gid/group")));
-  // We can't use views_embed_view() as we have exposed filter, and we need to
-  // make sure the path is overriden to the current URL.
-  // @see http://drupal.org/node/525592#comment-1968604
-  $view = views_get_view('hr_follows', 'followers');
-  $view->set_arguments(array($gid));
-  $view->override_url = $_GET['q'];
-  return $view->preview();
-}*/
-
-/**
  * Implements hook_og_ui_get_group_admin()
  */
 function hr_notifications_og_ui_get_group_admin($group_type, $gid) {
