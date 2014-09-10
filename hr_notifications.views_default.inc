@@ -120,6 +120,19 @@ function hr_notifications_views_default_views() {
   $handler->display->display_options['relationships']['uid']['table'] = 'flagging';
   $handler->display->display_options['relationships']['uid']['field'] = 'uid';
   $handler->display->display_options['relationships']['uid']['relationship'] = 'flag_content_rel';
+  /* Relationship: User: Profile */
+  $handler->display->display_options['relationships']['profile']['id'] = 'profile';
+  $handler->display->display_options['relationships']['profile']['table'] = 'users';
+  $handler->display->display_options['relationships']['profile']['field'] = 'profile';
+  $handler->display->display_options['relationships']['profile']['relationship'] = 'uid';
+  $handler->display->display_options['relationships']['profile']['bundle_types'] = array(
+    'main' => 'main',
+  );
+  /* Relationship: Profile: User uid */
+  $handler->display->display_options['relationships']['user']['id'] = 'user';
+  $handler->display->display_options['relationships']['user']['table'] = 'profile';
+  $handler->display->display_options['relationships']['user']['field'] = 'user';
+  $handler->display->display_options['relationships']['user']['relationship'] = 'profile';
   $handler->display->display_options['defaults']['fields'] = FALSE;
   /* Field: Content: Title */
   $handler->display->display_options['fields']['title']['id'] = 'title';
@@ -144,6 +157,23 @@ function hr_notifications_views_default_views() {
   $handler->display->display_options['fields']['counter']['alter']['alter_text'] = TRUE;
   $handler->display->display_options['fields']['counter']['alter']['text'] = '[counter]. [name]';
   $handler->display->display_options['fields']['counter']['counter_start'] = '1';
+  /* Field: Field: Location */
+  $handler->display->display_options['fields']['field_location']['id'] = 'field_location';
+  $handler->display->display_options['fields']['field_location']['table'] = 'field_data_field_location';
+  $handler->display->display_options['fields']['field_location']['field'] = 'field_location';
+  $handler->display->display_options['fields']['field_location']['relationship'] = 'profile';
+  $handler->display->display_options['fields']['field_location']['settings'] = array(
+    'link' => 0,
+  );
+  /* Field: Field: Organization */
+  $handler->display->display_options['fields']['field_organizations']['id'] = 'field_organizations';
+  $handler->display->display_options['fields']['field_organizations']['table'] = 'field_data_field_organizations';
+  $handler->display->display_options['fields']['field_organizations']['field'] = 'field_organizations';
+  $handler->display->display_options['fields']['field_organizations']['relationship'] = 'profile';
+  $handler->display->display_options['fields']['field_organizations']['settings'] = array(
+    'link' => 0,
+  );
+  $handler->display->display_options['fields']['field_organizations']['delta_offset'] = '0';
   $handler->display->display_options['defaults']['arguments'] = FALSE;
   /* Contextual filter: Flags: Content ID */
   $handler->display->display_options['arguments']['entity_id']['id'] = 'entity_id';
@@ -188,9 +218,13 @@ function hr_notifications_views_default_views() {
     t('Space Followers'),
     t('counter'),
     t('Flag user'),
+    t('Profile'),
+    t('User'),
     t('Space Title'),
     t('List of Followers'),
     t('[counter]. [name]'),
+    t('Location'),
+    t('Organization'),
   );
   $export['hr_follows'] = $view;
 
