@@ -20,6 +20,15 @@ function hr_notifications_user_default_permissions() {
     'module' => 'flag',
   );
 
+  // Exported permission: 'flag hr_reliefweb'.
+  $permissions['flag hr_reliefweb'] = array(
+    'name' => 'flag hr_reliefweb',
+    'roles' => array(
+      'authenticated user' => 'authenticated user',
+    ),
+    'module' => 'flag',
+  );
+
   // Exported permission: 'unflag hr_follow'.
   $permissions['unflag hr_follow'] = array(
     'name' => 'unflag hr_follow',
@@ -27,6 +36,13 @@ function hr_notifications_user_default_permissions() {
       'administrator' => 'administrator',
       'authenticated user' => 'authenticated user',
     ),
+    'module' => 'flag',
+  );
+
+  // Exported permission: 'unflag hr_reliefweb'.
+  $permissions['unflag hr_reliefweb'] = array(
+    'name' => 'unflag hr_reliefweb',
+    'roles' => array(),
     'module' => 'flag',
   );
 
